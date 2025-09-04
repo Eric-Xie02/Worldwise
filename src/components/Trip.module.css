@@ -1,0 +1,44 @@
+.trip {
+  padding: 2rem 3rem;
+  background-color: var(--color-dark--2);
+  border-radius: 7px;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.row h6 {
+  text-transform: uppercase;
+  font-size: 1.1rem;
+  font-weight: 900;
+  color: var(--color-light--1);
+}
+
+.row h3 {
+  font-size: 1.7rem;
+  font-weight: 600;
+}
+
+.row p {
+  font-size: 1.6rem;
+  color: var(--color-light--3);
+}
+
+.cityList {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.buttonContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

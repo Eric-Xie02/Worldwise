@@ -1,0 +1,40 @@
+{
+  "cities": [
+    {
+      "cityName": "Castello de la Plana",
+      "country": "Spain",
+      "emoji": "🇪🇸",
+      "date": "2025-07-01T20:35:44.896Z",
+      "notes": "",
+      "position": {
+        "lat": "39.98712409571923",
+        "lng": "-0.05270004272460938"
+      },
+      "id": 1
+    },
+    {
+      "cityName": "Pereruela",
+      "country": "Spain",
+      "emoji": "🇪🇸",
+      "date": "2025-07-01T20:36:10.315Z",
+      "notes": "",
+      "position": {
+        "lat": "41.34583608281704",
+        "lng": "-5.844726562500001"
+      },
+      "id": 2
+    },
+    {
+      "cityName": "Montgeron",
+      "country": "France",
+      "emoji": "🇫🇷",
+      "date": "2025-08-18T18:21:52.869Z",
+      "notes": "",
+      "position": {
+        "lat": "48.69096039092552",
+        "lng": "2.4609375000000004"
+      },
+      "id": 3
+    }
+  ]
+}
