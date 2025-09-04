@@ -9,7 +9,7 @@ import { useUser } from "../hooks/useUser";
 
 export default function Login() {
   // PRE-FILL FOR DEV PURPOSES
-  const [email, setEmail] = useState("exie102202@gmail.com");
+  const [email, setEmail] = useState("demo@worldwise.com");
   const [password, setPassword] = useState("password");
   const { login, isLoading, error } = useLogin();
   const { isAuthenticated, isLoading: isLoadingUser, user } = useUser();
