@@ -15,6 +15,7 @@ import Trip from "./components/Trip";
 import CreateTrip from "./components/CreateTrip";
 import EditTrip from "./components/EditTrip";
 import EditCity from "./components/EditCity";
+import GlobeMap from "./components/GlobeMap";
 
 const Homepage = lazy(() => import("./pages/Homepage"));
 const Product = lazy(() => import("./pages/Product"));
