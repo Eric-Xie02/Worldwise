@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import Map, { Marker, NavigationControl } from "react-map-gl/mapbox";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useGetCities } from "../hooks/useGetCities";
@@ -11,42 +11,39 @@ const GlobeMap = () => {
   const navigate = useNavigate();
   const { cities } = useGetCities();
   const [mapLat, mapLng] = useUrlPosition();
-  const [viewState, setViewState] = useState({
-    latitude: 0,
-    longitude: 0,
-    zoom: 2,
-    pitch: 0,
-    bearing: 0,
-  });
 
-  useEffect(
-    function () {
-      if (mapLat && mapLng) {
-        setViewState((viewState) => ({
-          ...viewState,
-          latitude: mapLat,
-          longitude: mapLng,
-        }));
-      }
-    },
-    [mapLat, mapLng]
-  );
+  const mapRef = useRef(null);
+
+  useEffect(() => {
+    if (!mapRef.current) return;
+    if (!mapLat || !mapLng) return;
+
+    mapRef.current.flyTo({
+      center: [mapLng, mapLat],
+      zoom: 4,
+      speed: 1.2,
+      curve: 1.4,
+      essential: true,
+    });
+  }, [mapLat, mapLng]);
 
   return (
     <Map
       reuseMaps
+      ref={mapRef}
       style={{ width: "100%", height: "100%" }}
-      {...viewState}
-      onMove={(evt) => setViewState(evt.viewState)}
+      initialViewState={{
+        latitude: 20,
+        longitude: 0,
+        zoom: 1.8,
+      }}
       mapStyle="mapbox://styles/mapbox/streets-v12"
       mapboxAccessToken={MAPBOX_KEY}
       projection="globe"
       onClick={(e) => {
-        console.log(e);
         navigate(`form?lat=${e.lngLat.lat}&lng=${e.lngLat.lng}`);
       }}
     >
-      <NavigationControl position="top-left" />
       {cities?.map((city) => (
         <Marker
           key={city.id}
