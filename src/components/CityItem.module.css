@@ -1,7 +1,8 @@
 .cityItem {
-  display: flex;
-  gap: 1.6rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto auto auto;
   align-items: center;
+  gap: 1.2rem;
 
   background-color: var(--color-dark--2);
   border-radius: 7px;
@@ -69,10 +70,12 @@
   font-size: 1.7rem;
   font-weight: 600;
   margin-right: auto;
+  overflow-wrap: break-word;
 }
 
 .date {
   font-size: 1.5rem;
+  white-space: nowrap;
 }
 
 .deleteBtn {
@@ -94,6 +97,7 @@
 }
 
 .timeVisited {
+  white-space: nowrap;
   font-weight: 400;
   font-size: 1.5rem;
 }
