@@ -56,6 +56,11 @@ function Map() {
         longitude: 0,
         zoom: 1.8,
       }}
+      fog={{
+        color: "rgb(186,210,235)",
+        "horizon-blend": 0.02,
+        "star-intensity": 0.6,
+      }}
       mapStyle="mapbox://styles/mapbox/streets-v12"
       mapboxAccessToken={MAPBOX_KEY}
       projection="globe"
