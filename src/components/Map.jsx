@@ -1,95 +1,79 @@
-import { Navigate, useNavigate, useSearchParams } from "react-router-dom";
-import styles from "./Map.module.css";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-  useMap,
-  useMapEvents,
-} from "react-leaflet";
-import { useEffect, useState } from "react";
-// import { useCities } from "../contexts/CitiesContext";
-import { useGeolocation } from "../hooks/useGeolocation";
-import Button from "./Button";
-import { useUrlPosition } from "../hooks/useUrlPosition";
+import React, { useEffect, useRef } from "react";
+import MapboxMap, { Marker } from "react-map-gl/mapbox";
+import "mapbox-gl/dist/mapbox-gl.css";
 import { useGetCities } from "../hooks/useGetCities";
+import { useNavigate } from "react-router-dom";
+import { useUrlPosition } from "../hooks/useUrlPosition";
+
+const MAPBOX_KEY = import.meta.env.VITE_MAPBOX_KEY;
 
 function Map() {
-  // const { cities } = useCities();
+  const navigate = useNavigate();
   const { cities } = useGetCities();
-  const [mapPosition, setMapPosition] = useState([40, 0]);
-  const {
-    isLoading: isLoadingPosition,
-    position: geolocationPosition,
-    getPosition,
-  } = useGeolocation();
   const [mapLat, mapLng] = useUrlPosition();
 
-  useEffect(
-    function () {
-      if (mapLat && mapLng) {
-        setMapPosition([parseFloat(mapLat), parseFloat(mapLng)]);
-      }
-    },
-    [mapLat, mapLng]
-  );
+  const mapRef = useRef(null);
 
-  useEffect(
-    function () {
-      if (geolocationPosition)
-        setMapPosition([geolocationPosition.lat, geolocationPosition.lng]);
-    },
-    [geolocationPosition]
-  );
+  //Move map to url location
+  useEffect(() => {
+    if (!mapRef.current) return;
+    if (!mapLat || !mapLng) return;
+
+    const zoomOptions = mapRef.current.getZoom() < 8 ? { zoom: 8 } : {};
+
+    mapRef.current.flyTo({
+      center: [mapLng, mapLat],
+      zoom: zoomOptions.zoom,
+      speed: 1.2,
+      curve: 1.4,
+      essential: true,
+    });
+  }, [mapLat, mapLng]);
+
+  //Moves map to location specified in url on page load/reload
+  const handleMapLoad = () => {
+    if (!mapRef.current) return;
+    if (!mapLat || !mapLng) return;
+
+    const zoomOptions = mapRef.current.getZoom() < 8 ? { zoom: 8 } : {};
+
+    mapRef.current.flyTo({
+      center: [mapLng, mapLat],
+      ...zoomOptions,
+      speed: 1.2,
+      curve: 1.4,
+      essential: true,
+    });
+  };
 
   return (
-    <div className={styles.mapContainer} onClick={() => Navigate("form")}>
-      {!geolocationPosition && (
-        <Button type="position" onClick={getPosition}>
-          {isLoadingPosition ? "Loading..." : "Use your position"}
-        </Button>
-      )}
-      <MapContainer
-        center={mapPosition}
-        zoom={5}
-        scrollWheelZoom={true}
-        className={styles.mapContainer}
-      >
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
+    <MapboxMap
+      reuseMaps
+      ref={mapRef}
+      style={{ width: "100%", height: "100%" }}
+      initialViewState={{
+        latitude: 20,
+        longitude: 0,
+        zoom: 1.8,
+      }}
+      mapStyle="mapbox://styles/mapbox/streets-v12"
+      mapboxAccessToken={MAPBOX_KEY}
+      projection="globe"
+      onLoad={handleMapLoad}
+      onClick={(e) => {
+        navigate(`form?lat=${e.lngLat.lat}&lng=${e.lngLat.lng}`);
+      }}
+    >
+      {cities?.map((city) => (
+        <Marker
+          key={city.id}
+          latitude={city.position.lat}
+          longitude={city.position.lng}
+          anchor="bottom"
         />
-        {cities?.map((city) => (
-          <Marker
-            position={[city.position.lat, city.position.lng]}
-            key={city.id}
-          >
-            <Popup>
-              <span>{city.emoji}</span>
-              <span>{city.cityName}</span>
-            </Popup>
-          </Marker>
-        ))}
-        <ChangeCenter position={mapPosition} />
-        <DetectClick />
-      </MapContainer>
-    </div>
+      ))}
+    </MapboxMap>
   );
-}
-
-function ChangeCenter({ position }) {
-  const map = useMap();
-  map.setView(position);
-  return null;
-}
-
-function DetectClick() {
-  const navigate = useNavigate();
-
-  useMapEvents({
-    click: (e) => navigate(`form?lat=${e.latlng.lat}&lng=${e.latlng.lng}`),
-  });
 }
 
 export default Map;

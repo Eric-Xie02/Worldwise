@@ -18,8 +18,6 @@ const initialState = {
 };
 
 function reducer(state, action) {
-  console.log(action);
-
   switch (action.type) {
     case "loading":
       return { ...state, isLoading: true };

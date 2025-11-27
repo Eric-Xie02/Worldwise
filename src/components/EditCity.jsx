@@ -42,8 +42,6 @@ function EditCity() {
 
     if (!cityName || !startDate) return;
 
-    console.log(currentCity);
-
     const newCity = {
       ...currentCity,
       city_name: cityName,
